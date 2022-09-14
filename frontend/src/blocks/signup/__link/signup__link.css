@@ -1,0 +1,10 @@
+.signup__link {
+  margin: 0;
+  color: white;
+  text-decoration: none;
+  transition: opacity 0.5s;
+}
+
+.signup__link:hover {
+  opacity: 0.5;
+}

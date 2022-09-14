@@ -1,0 +1,12 @@
+.popup__container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 560px) {
+  .popup__container {
+    gap: 16px;
+  }
+}
