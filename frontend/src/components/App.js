@@ -45,8 +45,8 @@ function App() {
 
     Promise.all([api.getProfileData(), api.getInitialCards()])
       .then((res) => {
-        setCurrentUser(res[0]);
-        setCards(res[1]);
+        setCurrentUser(res[0].data);
+        setCards(res[1].data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -60,7 +60,6 @@ function App() {
           localStorage.setItem('jwt', data.token);
           setLoggedIn(true);
           handleTokenCheck();
-          history.push('/main');
         }
       })
       .catch((errJson) => {
@@ -73,6 +72,11 @@ function App() {
   function handleLogout() {
     setUserEmail('');
     setLoggedIn(false);
+    setCurrentUser({
+      name: '',
+      about: '',
+      avatar: '',
+    });
     localStorage.removeItem('jwt');
   }
 
@@ -84,6 +88,7 @@ function App() {
         .then((res) => {
           if (res) {
             setUserEmail(res.data.email);
+            setCurrentUser(res.data);
             setLoggedIn(true);
             history.push('/main');
           }
@@ -121,7 +126,7 @@ function App() {
       .changeLikeCardStatus(card._id, isLiked)
       .then((newCard) => {
         setCards((state) =>
-          state.map((c) => (c._id === card._id ? newCard : c))
+          state.map((c) => (c._id === card._id ? newCard.data : c))
         );
       })
       .catch((err) => console.log(err));
@@ -185,7 +190,7 @@ function App() {
     api
       .setProfile(userInfo)
       .then((userInfo) => {
-        setCurrentUser(userInfo);
+        setCurrentUser(userInfo.data);
         setIsEditProfilePopupOpen(false);
       })
       .catch((errJson) => {
@@ -200,7 +205,7 @@ function App() {
     api
       .setAvatar(avatar)
       .then((userInfo) => {
-        setCurrentUser(userInfo);
+        setCurrentUser(userInfo.data);
         setIsEditAvatarPopupOpen(false);
       })
       .catch((errJson) => {
@@ -215,7 +220,7 @@ function App() {
     api
       .postCard(cardInfo)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards([...cards, newCard.data]);
         setIsAddPlacePopupOpen(false);
       })
       .catch((errJson) => {

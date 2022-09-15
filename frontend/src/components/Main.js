@@ -6,7 +6,7 @@ function Main(props) {
   const currentUser = React.useContext(CurrentUserContext);
 
   return (
-    props.cards.length > 0 && <main className='main'>
+    <main className='main'>
       <section className='profile'>
         <div
           className='profile__avatar-container'
@@ -32,7 +32,7 @@ function Main(props) {
       </section>
       <section className='elements'>
         <ul className='elements__list'>
-          {props.cards.map((cardInfo) => (
+          {props.cards.length > 0 && [...props.cards].reverse().map((cardInfo) => (
             <Card
               key={cardInfo._id}
               card={cardInfo}
