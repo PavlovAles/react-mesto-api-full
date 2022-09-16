@@ -42,13 +42,6 @@ function App() {
 
   useEffect(() => {
     handleTokenCheck();
-
-    Promise.all([api.getProfileData(), api.getInitialCards()])
-      .then((res) => {
-        setCurrentUser(res[0].data);
-        setCards(res[1].data);
-      })
-      .catch((err) => console.log(err));
   }, []);
 
   //login
@@ -81,24 +74,28 @@ function App() {
   }
 
   function handleTokenCheck() {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem('jwt');
-      auth
-        .checkToken(jwt)
-        .then((res) => {
-          if (res) {
-            setUserEmail(res.data.email);
-            setCurrentUser(res.data);
-            setLoggedIn(true);
-            history.push('/main');
-          }
-        })
-        .catch((errJson) => {
-          errJson.then((err) => {
-            console.log(`Error: ${err.message}`);
-          });
-        });
+    if (!localStorage.getItem('jwt')) {
+      return;
     }
+    const jwt = localStorage.getItem('jwt');
+    auth
+      .checkToken(jwt)
+      .then((res) => {
+        setCurrentUser(res.data);
+        setUserEmail(res.data.email);
+        setLoggedIn(true);
+        api.getInitialCards()
+          .then((res) => {
+            setCards(res.data);
+            history.push('/main');
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((errJson) => {
+        errJson.then((err) => {
+          console.log(`Error: ${err.message}`);
+        });
+      });
   }
 
   function handleRegistration(password, email) {
