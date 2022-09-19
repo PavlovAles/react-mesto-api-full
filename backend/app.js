@@ -15,7 +15,7 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 const corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: ['http://ales.nomoredomains.sbs', 'https://ales.nomoredomains.sbs', 'localhost:3001'],
   optionsSuccessStatus: 200,
 };
 
